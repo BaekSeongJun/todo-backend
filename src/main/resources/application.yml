@@ -10,6 +10,15 @@ spring:
         default_schema: todolist_db
         format_sql: true
 
+jwt:
+  secret: ${JWT_SECRET}
+
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true
+
 logging:
   level:
     org.hibernate: info
