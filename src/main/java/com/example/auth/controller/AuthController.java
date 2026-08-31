@@ -1,6 +1,7 @@
 package com.example.auth.controller;
 
 import com.example.auth.dto.LoginRequest;
+import com.example.auth.dto.OAuthExchangeRequest;
 import com.example.auth.dto.SignupRequest;
 import com.example.auth.dto.TokenResponse;
 import com.example.auth.dto.UserResponse;
@@ -30,6 +31,12 @@ public class AuthController {
     @PostMapping("/login")
     public ApiResponse<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
         return ApiResponse.success(authService.login(request));
+    }
+
+    @PostMapping("/oauth/exchange")
+    public ApiResponse<TokenResponse> exchangeOAuthCode(
+            @Valid @RequestBody OAuthExchangeRequest request) {
+        return ApiResponse.success(authService.exchangeCode(request.code()));
     }
 
     @GetMapping("/me")

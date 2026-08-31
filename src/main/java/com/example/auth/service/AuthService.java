@@ -5,6 +5,7 @@ import com.example.auth.dto.SignupRequest;
 import com.example.auth.dto.TokenResponse;
 import com.example.auth.dto.UserResponse;
 import com.example.auth.jwt.JwtTokenProvider;
+import com.example.auth.oauth.OneTimeCodeStore;
 import com.example.common.exception.DuplicateEmailException;
 import com.example.common.exception.InvalidCredentialsException;
 import com.example.common.exception.UnauthorizedException;
@@ -24,6 +25,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final OneTimeCodeStore oneTimeCodeStore;
 
     @Transactional
     public TokenResponse signup(SignupRequest request) {
@@ -58,6 +60,11 @@ public class AuthService {
         }
 
         return new TokenResponse(jwtTokenProvider.generateToken(user.getId(), user.getRole()));
+    }
+
+    public TokenResponse exchangeCode(String code) {
+        String jwt = oneTimeCodeStore.consume(code);
+        return new TokenResponse(jwt);
     }
 
     public UserResponse getMe(Long userId) {
