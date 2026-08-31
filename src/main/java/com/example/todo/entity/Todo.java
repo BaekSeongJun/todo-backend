@@ -70,4 +70,15 @@ public class Todo extends BaseEntity {
         this.dueDate = dueDate;
         this.priority = priority != null ? priority : Priority.MEDIUM;
     }
+
+    public void toggle() {
+        this.completed = !this.completed;
+    }
+
+    public void update(String title, String content, LocalDate dueDate, Priority priority) {
+        this.title = title;
+        this.content = content;
+        this.dueDate = dueDate;
+        this.priority = priority != null ? priority : Priority.MEDIUM;
+    }
 }
