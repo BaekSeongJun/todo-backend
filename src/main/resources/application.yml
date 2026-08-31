@@ -24,6 +24,7 @@ jwt:
 
 app:
   oauth-redirect-url: ${APP_OAUTH_REDIRECT_URL}
+  cors-allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:3000}
 
 springdoc:
   swagger-ui:
