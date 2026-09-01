@@ -1,0 +1,30 @@
+# 통합테스트 전용 프로파일 — 로컬 PostgreSQL의 todolist_db_test 스키마를 직접 사용한다
+# (Docker/Testcontainers 금지, PRD 1.3 금지 사항). 커밋 대상이며 시크릿은 담지 않는다.
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres?currentSchema=todolist_db_test}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    properties:
+      hibernate:
+        default_schema: todolist_db_test
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:dummy-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:dummy-client-secret}
+            scope:
+              - email
+              - profile
+
+logging:
+  level:
+    org.hibernate.SQL: debug

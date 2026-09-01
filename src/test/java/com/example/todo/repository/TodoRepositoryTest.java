@@ -21,7 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 class TodoRepositoryTest {
 
     @Autowired private TodoRepository todoRepository;
