@@ -71,4 +71,8 @@ public class User extends BaseEntity {
         this.role = role != null ? role : UserRole.USER;
         this.enabled = enabled;
     }
+
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
 }
