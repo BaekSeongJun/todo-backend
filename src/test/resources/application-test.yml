@@ -25,6 +25,9 @@ spring:
               - email
               - profile
 
+app:
+  password-reset-url: ${APP_PASSWORD_RESET_URL:http://localhost:3000/reset-password}
+
 logging:
   level:
     org.hibernate.SQL: debug

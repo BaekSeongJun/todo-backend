@@ -25,6 +25,8 @@ jwt:
 app:
   oauth-redirect-url: ${APP_OAUTH_REDIRECT_URL}
   cors-allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:3000}
+  password-reset-url: ${APP_PASSWORD_RESET_URL}
+  mail-type: ${APP_MAIL_TYPE:log}
 
 springdoc:
   swagger-ui:
