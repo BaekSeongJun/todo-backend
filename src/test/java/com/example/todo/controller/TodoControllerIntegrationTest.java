@@ -185,6 +185,25 @@ class TodoControllerIntegrationTest {
     }
 
     @Test
+    void 제목으로_검색하면_부분일치하는_할일만_반환된다() {
+        String token = signupAndGetToken("todo-title-search@example.com");
+        createTodo(token, "보고서 초안 작성", "내용1");
+        createTodo(token, "보고서 제출", "내용2");
+        createTodo(token, "회의 준비", "내용3");
+
+        MvcTestResult result =
+                mvc.get()
+                        .uri("/api/todos?title=보고서")
+                        .header("Authorization", "Bearer " + token)
+                        .exchange();
+        result.assertThat().hasStatusOk();
+
+        Map<String, Object> page = extractData(bodyOf(result));
+        java.util.List<?> content = (java.util.List<?>) page.get("content");
+        assertThat(content).hasSize(2);
+    }
+
+    @Test
     void 본문에_script_태그를_포함해도_정제되어_저장된다() {
         String token = signupAndGetToken("todo-sanitize@example.com");
         String maliciousContent = "<script>alert(1)</script>안전한 내용";

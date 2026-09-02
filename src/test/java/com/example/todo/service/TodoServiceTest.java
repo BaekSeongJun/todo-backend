@@ -146,10 +146,10 @@ class TodoServiceTest {
         Todo pending = todo(1L, owner);
         Pageable pageable = PageRequest.of(0, 10);
         Page<Todo> page = new PageImpl<>(List.of(pending), pageable, 1);
-        Mockito.when(todoRepository.findAllByUserIdAndCompletedOptional(1L, false, pageable))
+        Mockito.when(todoRepository.findAllByUserIdAndFilters(1L, false, null, pageable))
                 .thenReturn(page);
 
-        Page<TodoResponse> result = todoService.getList(1L, false, pageable);
+        Page<TodoResponse> result = todoService.getList(1L, false, null, pageable);
 
         assertThat(result.getTotalElements()).isEqualTo(1);
         assertThat(result.getContent().get(0).id()).isEqualTo(1L);

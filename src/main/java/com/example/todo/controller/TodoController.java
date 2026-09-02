@@ -37,14 +37,15 @@ public class TodoController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "all") String status,
-            @RequestParam(defaultValue = "createdAt") String sort) {
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(required = false) String title) {
         Long userId = (Long) authentication.getPrincipal();
 
         Boolean completed = toCompleted(status);
         Pageable pageable = PageRequest.of(page, size, toSort(sort));
 
         return ApiResponse.success(
-                PageResponse.from(todoService.getList(userId, completed, pageable)));
+                PageResponse.from(todoService.getList(userId, completed, title, pageable)));
     }
 
     @PostMapping

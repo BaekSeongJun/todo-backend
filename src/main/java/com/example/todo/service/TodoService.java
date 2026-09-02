@@ -46,8 +46,8 @@ public class TodoService {
         return TodoResponse.from(todoRepository.save(todo));
     }
 
-    public Page<TodoResponse> getList(Long userId, Boolean completed, Pageable pageable) {
-        Page<Todo> page = todoRepository.findAllByUserIdAndCompletedOptional(userId, completed, pageable);
+    public Page<TodoResponse> getList(Long userId, Boolean completed, String title, Pageable pageable) {
+        Page<Todo> page = todoRepository.findAllByUserIdAndFilters(userId, completed, title, pageable);
 
         List<Long> todoIds = page.getContent().stream().map(Todo::getId).toList();
         Map<Long, Long> attachmentCounts =
