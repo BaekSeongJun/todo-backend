@@ -13,9 +13,14 @@ public record TodoResponse(
         LocalDate dueDate,
         Priority priority,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt) {
+        LocalDateTime updatedAt,
+        long attachmentCount) {
 
     public static TodoResponse from(Todo todo) {
+        return from(todo, 0L);
+    }
+
+    public static TodoResponse from(Todo todo, long attachmentCount) {
         return new TodoResponse(
                 todo.getId(),
                 todo.getTitle(),
@@ -24,6 +29,7 @@ public record TodoResponse(
                 todo.getDueDate(),
                 todo.getPriority(),
                 todo.getCreatedAt(),
-                todo.getUpdatedAt());
+                todo.getUpdatedAt(),
+                attachmentCount);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.todo.service;
 
+import com.example.attachment.repository.AttachmentRepository;
 import com.example.common.exception.TodoNotFoundException;
 import com.example.common.exception.UnauthorizedException;
 import com.example.todo.dto.TodoCreateRequest;
@@ -10,6 +11,9 @@ import com.example.todo.repository.TodoRepository;
 import com.example.todo.util.HtmlSanitizer;
 import com.example.user.entity.User;
 import com.example.user.repository.UserRepository;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +27,7 @@ public class TodoService {
 
     private final TodoRepository todoRepository;
     private final UserRepository userRepository;
+    private final AttachmentRepository attachmentRepository;
     private final HtmlSanitizer sanitizer;
 
     @Transactional
@@ -42,13 +47,24 @@ public class TodoService {
     }
 
     public Page<TodoResponse> getList(Long userId, Boolean completed, Pageable pageable) {
-        return todoRepository
-                .findAllByUserIdAndCompletedOptional(userId, completed, pageable)
-                .map(TodoResponse::from);
+        Page<Todo> page = todoRepository.findAllByUserIdAndCompletedOptional(userId, completed, pageable);
+
+        List<Long> todoIds = page.getContent().stream().map(Todo::getId).toList();
+        Map<Long, Long> attachmentCounts =
+                todoIds.isEmpty()
+                        ? Map.of()
+                        : attachmentRepository.countByTodoIdIn(todoIds).stream()
+                                .collect(
+                                        Collectors.toMap(
+                                                AttachmentRepository.TodoAttachmentCount::getTodoId,
+                                                AttachmentRepository.TodoAttachmentCount::getCount));
+
+        return page.map(todo -> TodoResponse.from(todo, attachmentCounts.getOrDefault(todo.getId(), 0L)));
     }
 
     public TodoResponse getOne(Long userId, Long id) {
-        return TodoResponse.from(getOwnedTodo(userId, id));
+        Todo todo = getOwnedTodo(userId, id);
+        return TodoResponse.from(todo, attachmentRepository.countByTodoId(id));
     }
 
     @Transactional

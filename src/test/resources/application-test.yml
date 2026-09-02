@@ -27,6 +27,7 @@ spring:
 
 app:
   password-reset-url: ${APP_PASSWORD_RESET_URL:http://localhost:3000/reset-password}
+  upload-dir: ${APP_UPLOAD_DIR:./target/test-uploads}
 
 logging:
   level:

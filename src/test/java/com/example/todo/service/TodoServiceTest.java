@@ -3,6 +3,7 @@ package com.example.todo.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.example.attachment.repository.AttachmentRepository;
 import com.example.common.exception.TodoNotFoundException;
 import com.example.todo.dto.TodoCreateRequest;
 import com.example.todo.dto.TodoResponse;
@@ -28,8 +29,10 @@ class TodoServiceTest {
 
     private final TodoRepository todoRepository = Mockito.mock(TodoRepository.class);
     private final UserRepository userRepository = Mockito.mock(UserRepository.class);
+    private final AttachmentRepository attachmentRepository = Mockito.mock(AttachmentRepository.class);
     private final HtmlSanitizer sanitizer = new HtmlSanitizer();
-    private final TodoService todoService = new TodoService(todoRepository, userRepository, sanitizer);
+    private final TodoService todoService =
+            new TodoService(todoRepository, userRepository, attachmentRepository, sanitizer);
 
     private User user(Long id) {
         User user =
