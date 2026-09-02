@@ -2,6 +2,8 @@ package com.example.user.repository;
 
 import com.example.user.entity.User;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -11,4 +13,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmailAndDeletedAtIsNull(String email);
 
     Optional<User> findByIdAndDeletedAtIsNull(Long id);
+
+    Page<User> findAllByDeletedAtIsNull(Pageable pageable);
+
+    Page<User> findAllByEmailContainingAndDeletedAtIsNull(String email, Pageable pageable);
+
+    long countByDeletedAtIsNull();
+
+    long countByDeletedAtIsNullAndEnabledTrue();
 }
