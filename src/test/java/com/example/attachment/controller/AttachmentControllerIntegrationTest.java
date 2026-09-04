@@ -27,10 +27,17 @@ import tools.jackson.databind.ObjectMapper;
 /**
  * PRD 12.2 항목 16(용량·형식·개수 제한)·17(타인 할 일 404)에 대응한다. Phase 8에서 확립된
  * @DataJpaTest 패키지 이동·Replace.NONE 필수 사실은 여기서는 @SpringBootTest 전체 컨텍스트를
- * 쓰므로 해당 없고, application-test.yml의 app.upload-dir(./target/test-uploads)로
+ * 쓰므로 해당 없고, application-test.properties의 app.upload-dir(./target/test-uploads)로
  * 실제 개발 업로드 디렉터리를 오염시키지 않는다.
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+// properties로 app.storage-type을 못박는다: OS 환경변수(.env의 APP_STORAGE_TYPE=s3)는
+// relaxed binding으로 application-test.properties보다 우선순위가 높아, 로컬에서 .env를
+// 로드한 채 테스트를 돌리면 이 값이 s3로 새어 들어와 download-url이 절대 URL(S3 presigned
+// URL)을 반환해 아래 assertion이 깨진다. @SpringBootTest(properties=...)는 OS 환경변수보다
+// 높은 우선순위를 가지므로 이 프로파일 파일에 값을 적는 것과 달리 실제로 효과가 있다.
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.MOCK,
+        properties = "app.storage-type=local")
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
